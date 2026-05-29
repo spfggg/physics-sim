@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>physics thing</title>
+</head>
+<body>
+
+<canvas id="c" width="800" height="400"></canvas>
+
+<br>
+
+angle
+<input id="angle" type="range" min="0" max="90" value="45">
+
+speed
+<input id="speed" type="range" min="1" max="20" value="10">
+
+<button id="go">launch</button>
+
+<script>
+
+let canvas = document.getElementById("c")
+let ctx = canvas.getContext("2d")
+
+let px = 50
+let py = 350
+let vx = 0
+let vy = 0
+
+let on = false
+
+let gravity = 0.2
+let bounce = 0.7
+
+document.getElementById("go").onclick = function() {
+
+    let a = document.getElementById("angle").value
+    let s = document.getElementById("speed").value
+
+    px = 50
+    py = 350
+
+    vx = Math.cos(a * Math.PI / 180) * s
+    vy = -Math.sin(a * Math.PI / 180) * s
+
+    on = true
+}
+
+function tick() {
+
+    if(on) {
+
+        vy = vy + gravity
+
+        px = px + vx
+        py = py + vy
+
+        if(py > 350) {
+
+            py = 350
+            vy = -vy * bounce
+
+            vx = vx * 0.98
+
+            if(Math.abs(vy) < 0.5) {
+                on = false
+            }
+        }
+    }
+}
+
+function draw() {
+
+    ctx.clearRect(0,0,800,400)
+
+    ctx.fillRect(0,360,800,40)
+
+    ctx.beginPath()
+    ctx.arc(px,py,5,0,Math.PI*2)
+    ctx.fill()
+}
+
+function loop() {
+    tick()
+    draw()
+    requestAnimationFrame(loop)
+}
+
+loop()
+
+</script>
+
+</body>
+</html>
